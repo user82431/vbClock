@@ -1,0 +1,15 @@
+# Build/cache artifacts
+.build/
+dist/
+lib/
+tempclean/
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+*.log
+
+# Local app data
+*.user
+*.suo
+.vs/

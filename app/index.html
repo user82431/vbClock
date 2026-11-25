@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-wallpaper="plain" data-density="comfortable">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>vbClock</title>
+  <meta name="description" content="vbClock — a minimal, fully customizable clock, alarm and timer app." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230067c0'/%3E%3Ccircle cx='32' cy='32' r='18' fill='none' stroke='white' stroke-width='4'/%3E%3Cpath d='M32 21v11l7 5' stroke='white' stroke-width='4' stroke-linecap='round' fill='none'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <aside class="rail" aria-label="Primary navigation">
+      <div class="rail-brand" aria-hidden="true">vb</div>
+
+      <nav class="rail-nav">
+        <button class="rail-btn is-active" data-view="clock" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          <span>Clock</span>
+        </button>
+        <button class="rail-btn" data-view="alarms" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span>Alarm</span>
+          <i class="rail-dot" id="alarmDot" hidden></i>
+        </button>
+        <button class="rail-btn" data-view="timer" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2"/><path d="M9 2h6"/></svg>
+          <span>Timer</span>
+          <i class="rail-dot" id="timerDot" hidden></i>
+        </button>
+      </nav>
+
+      <div class="rail-foot">
+        <button class="rail-btn" data-view="settings" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+          <span>Settings</span>
+        </button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="topbar-text">
+          <h1 id="pageTitle">Clock</h1>
+          <p id="pageSub">Your time, your way.</p>
+        </div>
+        <button class="ghost-btn theme-quick" id="themeQuick" type="button">
+          <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+          <span id="themeQuickLabel">Light</span>
+        </button>
+      </header>
+
+      <div class="views">
+        <!-- Clock -->
+        <section class="view is-active" id="view-clock" aria-label="Clock">
+          <div class="clock-wrap">
+            <div class="clock-card">
+              <svg id="analogClock" viewBox="0 0 200 200" role="img" aria-label="Analog clock">
+                <circle class="clock-plate" cx="100" cy="100" r="99"></circle>
+                <circle class="clock-ring" id="clockRing" cx="100" cy="100" r="95"></circle>
+                <g id="tickLayer"></g>
+                <g id="numeralLayer"></g>
+                <g class="hand hand-hour" id="handHour"><line x1="100" y1="110" x2="100" y2="54"></line></g>
+                <g class="hand hand-minute" id="handMinute"><line x1="100" y1="112" x2="100" y2="34"></line></g>
+                <g class="hand hand-second" id="handSecond"><line x1="100" y1="120" x2="100" y2="18"></line></g>
+                <circle class="clock-pin" id="clockPin" cx="100" cy="100" r="3.2"></circle>
+              </svg>
+
+              <div class="clock-digital" id="clockDigital">
+                <div class="digital-time" id="digitalTime">--:--</div>
+                <div class="digital-date" id="digitalDate"></div>
+              </div>
+
+              <button class="zone-chip" id="zoneChip" type="button" title="Change time zone in Settings">
+                <span class="zone-dot"></span>
+                <span id="zoneName">Local time</span>
+                <span id="zoneAbbr" class="zone-abbr"></span>
+              </button>
+            </div>
+            <p class="hint">Every detail — face, hands, time zone, theme — is in Settings.</p>
+          </div>
+        </section>
+
+        <!-- Alarms -->
+        <section class="view" id="view-alarms" aria-label="Alarms">
+          <div class="panel-grid">
+            <form class="card form-card" id="alarmForm" autocomplete="off">
+              <h2 class="card-title">New alarm</h2>
+              <div class="field-row">
+                <label class="field">
+                  <span>Time</span>
+                  <input type="time" id="alarmTime" value="07:00" required />
+                </label>
+                <label class="field grow">
+                  <span>Label</span>
+                  <input type="text" id="alarmLabel" maxlength="40" placeholder="Alarm" />
+                </label>
+              </div>
+
+              <div class="field">
+                <span>Repeat</span>
+                <div class="day-picker" id="dayPicker">
+                  <button type="button" data-day="0" aria-pressed="false" title="Sunday">S</button>
+                  <button type="button" data-day="1" aria-pressed="false" title="Monday">M</button>
+                  <button type="button" data-day="2" aria-pressed="false" title="Tuesday">T</button>
+                  <button type="button" data-day="3" aria-pressed="false" title="Wednesday">W</button>
+                  <button type="button" data-day="4" aria-pressed="false" title="Thursday">T</button>
+                  <button type="button" data-day="5" aria-pressed="false" title="Friday">F</button>
+                  <button type="button" data-day="6" aria-pressed="false" title="Saturday">S</button>
+                </div>
+                <p class="hint tight" id="repeatHint">Leave all off for a one-time alarm.</p>
+              </div>
+
+              <label class="field">
+                <span>Sound</span>
+                <select id="alarmSound" class="input">
+                  <option value="default">App default</option>
+                  <option value="chime">Chime</option>
+                  <option value="bell">Bell</option>
+                  <option value="beep">Beep</option>
+                  <option value="digital">Digital</option>
+                  <option value="gentle">Gentle</option>
+                </select>
+              </label>
+
+              <button class="primary-btn wide" type="submit">
+                <svg viewBox="0 0 24 24" aria-hidden="true" class="btn-icon"><path d="M12 5v14M5 12h14"/></svg>
+                Add alarm
+              </button>
+            </form>
+
+            <div class="card list-card">
+              <div class="card-head">
+                <h2 class="card-title">Alarms</h2>
+                <span class="muted small" id="alarmCount"></span>
+              </div>
+              <div class="alarm-list" id="alarmList"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Timer -->
+        <section class="view" id="view-timer" aria-label="Timer">
+          <div class="timer-wrap">
+            <div class="timer-ring-wrap">
+              <svg class="timer-ring" viewBox="0 0 200 200" aria-hidden="true">
+                <circle class="ring-track" cx="100" cy="100" r="88"></circle>
+                <circle class="ring-progress" id="ringProgress" cx="100" cy="100" r="88"></circle>
+              </svg>
+              <div class="timer-center">
+                <div class="timer-time" id="timerTime">00:00</div>
+                <div class="timer-sub" id="timerSub">Ready</div>
+              </div>
+            </div>
+
+            <div class="timer-controls">
+              <button class="primary-btn" id="timerStart" type="button">Start</button>
+              <button class="ghost-btn" id="timerReset" type="button">Reset</button>
+            </div>
+
+            <div class="card timer-inputs">
+              <label class="time-input"><span>Hours</span><input type="number" id="tHours" min="0" max="99" step="1" value="0" /></label>
+              <label class="time-input"><span>Minutes</span><input type="number" id="tMins" min="0" max="59" step="1" value="5" /></label>
+              <label class="time-input"><span>Seconds</span><input type="number" id="tSecs" min="0" max="59" step="1" value="0" /></label>
+            </div>
+
+            <div class="presets" id="timerPresets"></div>
+          </div>
+        </section>
+
+        <!-- Settings -->
+        <section class="view" id="view-settings" aria-label="Settings">
+          <div class="settings" id="settingsRoot"></div>
+          <p class="settings-foot">vbClock · minimal by design, yours by default.</p>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- Ringing overlay -->
+  <div class="ring-overlay" id="ringOverlay" hidden role="alertdialog" aria-modal="true" aria-labelledby="ringTitle">
+    <div class="ring-card">
+      <div class="ring-pulse" id="ringPulse">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      </div>
+      <p class="ring-kicker" id="ringKicker">Alarm</p>
+      <h2 class="ring-title" id="ringTitle">Alarm</h2>
+      <p class="ring-sub" id="ringSub"></p>
+      <div class="ring-actions">
+        <button class="ghost-btn" id="ringSnooze" type="button">Snooze</button>
+        <button class="primary-btn" id="ringStop" type="button">Stop</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="js/data.js"></script>
+  <script src="js/sounds.js"></script>
+  <script src="js/clock.js"></script>
+  <script src="js/alarms.js"></script>
+  <script src="js/timer.js"></script>
+  <script src="js/settings.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
