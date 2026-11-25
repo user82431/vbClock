@@ -1,8 +1,8 @@
 # vbClock
 
-**vbClock** is a minimal, fully customizable Windows desktop clock app — inspired by the simplicity of the Windows Clock, but built to let you make practically everything your own.
+**vbClock** is a lightweight and minimal clock app.Inspired by the simplicity of the Windows Clock, but built to let you make practically everything your own.
 
-It is a **desktop app**, not a website: it runs in its own native window using Microsoft Edge WebView2 (included with Windows 10/11).
+It runs in its own native window using Microsoft Edge WebView2 (included with Windows 10/11).
 
 ## Features
 
@@ -94,4 +94,4 @@ vbClock/
 
 ## License
 
-Personal / project use as needed. Replace or add a license if you plan to distribute it.
+MIT License.
